@@ -16,7 +16,7 @@ import {
     Content,  
 } from 'native-base'; 
 
-class PaseoCard extends React.Component {
+class PasearCard extends React.Component {
     constructor (){
         super()
         this.state = {
@@ -24,7 +24,9 @@ class PaseoCard extends React.Component {
         }
     }
     renderItem = ({item}) => {
-
+        const {navigation} = this.props;
+        const email = navigation.getParam('email','NO-EMAIL');
+        const password = navigation.getParam('password','NO-PASSWORD');
         return (
             <View style={styles.flatItem}>  
                 <View style={styles.flatContent}> 
@@ -37,9 +39,9 @@ class PaseoCard extends React.Component {
                     </Text> 
                 </View>
                 <TouchableOpacity style={styles.subBtn}
-                                onPress={()=> this.assignPaseos(email,password,item.id)}>
+                                onPress={()=> this.startPaseos(item.id)}>
                     <Text>
-                        Tomar Paseo
+                        Finalizar Paseo
                     </Text>
                 </TouchableOpacity> 
 
@@ -57,8 +59,19 @@ class PaseoCard extends React.Component {
     }
     componentWillMount (){
         
-        const url = 'http://192.168.1.99:3001/paseo/all/' 
-        fetch(url) 
+    }
+    componentDidMount (){ 
+        
+    } 
+    getPaseoId(correo,constrasena) {
+        const url = 'http://192.168.1.99:3001/paseo/paseador/pendiente' 
+        fetch(url, {
+            method: 'GET',
+            headers: {
+              email: correo,
+              password: contrasena,
+            },
+        })
         .then((response) => response.json() )
         .then( ( responseJson)=> {
             this.setState({
@@ -68,19 +81,12 @@ class PaseoCard extends React.Component {
             console.log(error)
         })  
     }
-    componentDidMount (){ 
-        
-    } 
-
-    assignPaseos (correo,contrasena,idPaseo){
-        
-        let collection = {}
-        collection.email=correo,
-        collection.password=contrasena,
+    startPaseo (idPaseo){
+        let collection = {} 
         collection.idpaseo=idPaseo
         console.warn(collection);
      
-        const url = 'http://192.168.1.99:3001/paseador/tomarpaseo'
+        const url = 'http://192.168.1.99:3001/paseo/terminar'
         fetch(url, {
           method: 'POST',
           body: JSON.stringify(collection),
@@ -95,10 +101,9 @@ class PaseoCard extends React.Component {
 
     render() {
         const {navigation} = this.props;
-        email = 'martin@mail.com'
-        password = 'mar123'
-        // const email = navigation.getParam('email','NO-EMAIL');
-        // const password = navigation.getParam('password','NO-PASSWORD');
+        const email = navigation.getParam('email','NO-EMAIL');
+        const password = navigation.getParam('password','NO-PASSWORD');
+
         return (
             <View style={styles.container}> 
                 <FlatList  
@@ -106,14 +111,14 @@ class PaseoCard extends React.Component {
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => index}
                     ItemSeparatorComponent={this.renderSeparator}
-                /> 
+                />
             </View> 
 
         );
     }
 }
 
-export default PaseoCard;
+export default PasearCard;
 
 const styles = StyleSheet.create({
     container: {  

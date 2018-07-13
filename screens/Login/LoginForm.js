@@ -43,12 +43,17 @@ class LoginForm extends React.Component {
 
     async login(){
         try {
+            const email = this.state.email;
+            const password =  this.state.password;
             await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             this.setState({
             response: 'usario conectado'
             })
             setTimeout(()=>{
-                this.props.navigation.navigate('DrawerNavigator')
+                this.props.navigation.navigate('DrawerNavigator' ,{
+                    email: email,
+                    password: password, 
+                  })
             }, 100)
         } catch(error){
             this.setState({
@@ -60,6 +65,7 @@ class LoginForm extends React.Component {
 
     render() {
         return (
+        
             <View style={styles.container}> 
                 <KeyboardAvoidingView behavior='padding' style={styles.container}>
                     <TextInput 

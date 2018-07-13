@@ -9,6 +9,7 @@ import {
   TouchableHighlight
 } from 'react-native';
 import PaseoCard from './PaseoCard';
+import PasearCard from './PasearCard';
 
 
 export default class Dasboard extends React.Component {
@@ -28,7 +29,13 @@ export default class Dasboard extends React.Component {
                     <Text style={styles.titulo} > Paseos disponibles </Text> 
 
                     < PaseoCard  navigation={this.props.navigation}/>
+ 
+                </View> 
+                <View> 
+                    <Text  > Paseo a realizar  </Text> 
 
+                    < PasearCard  navigation={this.props.navigation}/>
+ 
                 </View> 
 
             </View>

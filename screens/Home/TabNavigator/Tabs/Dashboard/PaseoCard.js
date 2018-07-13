@@ -6,7 +6,8 @@ import {
   View,
   Image,
   AppRegistry,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 
 import { 
@@ -23,25 +24,30 @@ class PaseoCard extends React.Component {
         }
     }
     renderItem = ({item}) => {
+        const {navigation} = this.props;
+        const email = navigation.getParam('email','NO-EMAIL');
+        const password = navigation.getParam('password','NO-PASSWORD');
         return (
-            <View style={styles.flatItem}>
-                <Text> Hola 3</Text>
-                {/* <Image style={{ width: 100, height:100}}
-                    source = {{uri: item.picture }} /> */}
+            <View style={styles.flatItem}>  
                 <View style={styles.flatContent}> 
                     <Text style={styles.itemHorario}>
-                        {item.name}
+                        {item.horario}
                     </Text>
 
                     <Text style={styles.itemComentario}>
-                        {item.about}
+                        {item.dia}
                     </Text> 
-                </View> 
-
-                <Button
+                </View>
+                <TouchableOpacity onPress={()=> this.assignPaseos(email,password,item.id)}>
+                    <Text>
+                        Tomar Paseo
+                    </Text>
+                </TouchableOpacity>
+                {/* <Button  onPress={()=> this.assignPaseos(correo,contrasena,item.id)}
                         title= 'Tomar Paseo'
                     >
-                    </Button>
+                </Button> */}
+
             </View>  
         ) 
     }
@@ -55,56 +61,60 @@ class PaseoCard extends React.Component {
         )
     }
     componentWillMount (){
-
-    }
-    componentDidMount (){
-        const url = 'http://www.json-generator.com/api/json/get/cgiLPwERlu?indent=2'
-        //const url = 'http://192.168.1.159:3001/paseo/all/' 
-        fetch(url)
-        // fetch(url, {
-        //     method: 'GET',
-        // })
+        const url = 'http://192.168.0.13:3001/paseo/all/' 
+        fetch(url) 
         .then((response) => response.json() )
         .then( ( responseJson)=> {
             this.setState({
-                dataSource: responseJson.receta_array});
+                dataSource: responseJson.data});
         })
         .catch((error) => {
             console.log(error)
         })  
+    }
+    componentDidMount (){
+
     } 
 
-    // _setPaseo (){
-    //     let collection = {}
-    //     collection.email=email, 
-    //     console.warn(collection);
+    assignPaseos (correo,contrasena,idPaseo){
+        let collection = {}
+        collection.email=correo,
+        collection.password=contrasena,
+        collection.idpaseo=idPaseo
+        console.warn(collection);
      
-    //     const url = 'http://192.168.1.159:3001/create/paseo/ '
-    //     fetch(url, {
-    //       method: 'POST',
-    //       body: JSON.stringify(collection),
-    //       headers: {
-    //         Accept: 'application/json',
-    //         'Content-Type': 'application/json',
-    //       },
-    //     }) 
-    //     .then((response) => response.json() )
-    //     .catch((error) => { console.log(error) })
-    // }
+        const url = 'http://192.168.1.159:3001/paseador/tomarpaseo'
+        fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(collection),
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }) 
+        .then((response) => response.json() )
+        .catch((error) => { console.log(error) })
+    }
 
     render() {
         return (
             <View style={styles.container}>
-
-                <Text> Hola 1</Text>
+  
                 <FlatList  
                     data = {this.state.dataSource}
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => index}
                     ItemSeparatorComponent={this.renderSeparator}
-                /> 
-
-                <Text> Hola 2</Text>
+                />
+                {/* <TouchableOpacity onPress={()=> this.assignPaseos(correo,contrasena,item.id)}>
+                    <Text>
+                        Tomar Paseo
+                    </Text>
+                </TouchableOpacity> */}
+                {/* <Button  onPress={()=> this.assignPaseos(correo,contrasena,item.id)}
+                        title= 'Tomar Paseo'
+                    >
+                </Button> */}
             </View> 
 
         );

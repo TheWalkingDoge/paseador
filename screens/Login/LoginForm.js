@@ -71,7 +71,7 @@ class LoginForm extends React.Component {
                         placeholderTextColor="grey"
                         placeholder="Contraseña"
                         style={styles.input}
-                        sourceTextEntry
+                        secureTextEntry={true}
                         password={true}
                         onChangeText={(password)=> this.setState({password})}/>    
                     <TouchableOpacity 
